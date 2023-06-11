@@ -1,0 +1,5 @@
+1. npm install react-bootstrap@1.6.1 bootstrap@4.6.0
+2. npm install react-icons
+3. npm install react-router-dom
+4. Assign Context in index.js
+5. npm install @faker-js/faker
