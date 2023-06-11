@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import { cartReducer } from "./Reducers";
 
 export const Cart = createContext();
+faker.seed(100);
 
 const Context = ({ children }) => {
   const products = [...Array(20)].map(() => ({
@@ -28,4 +29,3 @@ const Context = ({ children }) => {
 export default Context;
 
 export const CartState = () => useContext(Cart);
-
