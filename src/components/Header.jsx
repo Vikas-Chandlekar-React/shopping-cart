@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Badge,
   Button,
@@ -14,13 +14,28 @@ import { Link } from "react-router-dom";
 import "./styles.css";
 import { CartState } from "../context/Context";
 import { ACTIONS } from "../context/Reducers";
-
+import { debounce } from "lodash";
 const Header = () => {
   const {
     state: { cart },
     dispatch,
     productDispatch,
   } = CartState();
+
+  const deb = useCallback(
+    debounce((text) => {
+      productDispatch({
+        type: ACTIONS.FILTER_BY_SEARCH,
+        payload: text,
+      });
+    }, 1000),
+    []
+  );
+
+  const handleText = (text) => {
+    deb(text);
+  };
+
   return (
     <Navbar bg="dark" variant="dark" style={{ height: "80px" }}>
       <Container>
@@ -34,10 +49,7 @@ const Header = () => {
             className="m-auto"
             aria-label="Search"
             onChange={(e) => {
-              productDispatch({
-                type: ACTIONS.FILTER_BY_SEARCH,
-                payload: e.target.value,
-              });
+              handleText(e.target.value);
             }}
           />
         </Navbar.Text>
