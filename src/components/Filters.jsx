@@ -1,9 +1,18 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import Rating from "./Rating";
+import { CartState } from "../context/Context";
+import { ACTIONS } from "../context/Reducers";
 
 const Filters = () => {
   const [rating, setRating] = useState(0);
+
+  const {
+    productState: { byStock, byFastDelivery, byRating, sort, searchQuery },
+    productDispatch,
+  } = CartState();
+
+  console.log(byStock, byFastDelivery, byRating, sort, searchQuery);
 
   return (
     <div className="filters">
@@ -15,6 +24,13 @@ const Filters = () => {
           name="group1"
           type="radio"
           id={`inline-1`}
+          onChange={() =>
+            productDispatch({
+              type: ACTIONS.SORT_BY_PRICE,
+              payload: "lowToHigh",
+            })
+          }
+          checked={sort === "lowToHigh" ? true : false}
         />
       </span>
       <span>
@@ -24,6 +40,13 @@ const Filters = () => {
           name="group1"
           type="radio"
           id={`inline-2`}
+          onChange={() =>
+            productDispatch({
+              type: ACTIONS.SORT_BY_PRICE,
+              payload: "highToLow",
+            })
+          }
+          checked={sort === "highToLow" ? true : false}
         />
       </span>
       <span>
@@ -33,6 +56,12 @@ const Filters = () => {
           name="group1"
           type="checkbox"
           id={`inline-3`}
+          onChange={() =>
+            productDispatch({
+              type: ACTIONS.FILTER_BY_STOCK,
+            })
+          }
+          checked={byStock}
         />
       </span>
       <span>
@@ -42,20 +71,37 @@ const Filters = () => {
           name="group1"
           type="checkbox"
           id={`inline-4`}
+          onChange={() =>
+            productDispatch({
+              type: ACTIONS.FILTER_BY_DELIVERY,
+            })
+          }
+          checked={byFastDelivery}
         />
       </span>
       <span>
         <label style={{ paddingRight: 10 }}>Rating: </label>
         <Rating
-          rating={rating}
+          rating={byRating}
           onClick={(i) => {
-            console.log("i = ", i);
-            return setRating(i + 1);
+            productDispatch({
+              type: ACTIONS.FILTER_BY_RATING,
+              payload: i + 1,
+            });
           }}
           style={{ cursor: "pointer" }}
         />
       </span>
-      <Button variant="light">Clear Filters</Button>
+      <Button
+        variant="light"
+        onClick={() =>
+          productDispatch({
+            type: ACTIONS.CLEAR_FILTERS,
+          })
+        }
+      >
+        Clear Filters
+      </Button>
     </div>
   );
 };
